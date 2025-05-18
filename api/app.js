@@ -1,8 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import authRoutes from './routes/authRoutes.js';
-import eventRoutes from './routes/eventRoutes.js';
-import organizationRoutes from './routes/organizationRoutes.js';
+import authRoutes from '../routes/authRoutes.js';
+import eventRoutes from '../routes/eventRoutes.js';
+import organizationRoutes from '../routes/organizationRoutes.js';
 import dotenv from 'dotenv';
 
 const feAccess = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
