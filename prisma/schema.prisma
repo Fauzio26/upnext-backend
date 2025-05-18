@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,42 +8,78 @@ datasource db {
 }
 
 model Organization {
-  id          Int       @id @default(autoincrement())
-  name        String
-  email       String    @unique
-  password    String
-  profilePic  String?
-  bannerPic   String?
-  deleted     Boolean   @default(false)
-  events      Event[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id              String       @id @default(uuid())
+  name            String
+  email           String       @unique
+  password        String
+  profilePic      String?
+  bannerPic       String?
+  membershipProof String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
+
+  events          Event[]      @relation("organizationHasEvents")
+}
+
+enum EventCategory {
+  SEMINAR
+  WORKSHOP
+  WEBINAR
+  KOMPETISI
+  PELATIHAN
+  FESTIVAL
+  PENTAS_SENI
+  BAKTI_SOSIAL
+  MUSYAWARAH
+  REUNI
+  KAMPANYE
+  PAMERAN
+  KAJIAN
+  PERINGATAN_HARI_BESAR
+  LAUNCHING
+  OTHER
 }
 
 model Event {
-  id            Int      @id @default(autoincrement())
-  title         String
-  description   String
-  startDate     DateTime
-  endDate       DateTime
-  banners       Banner[]
-  documents     Document[]
-  organization  Organization @relation(fields: [organizationId], references: [id])
-  organizationId Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id              String       @id @default(uuid())
+  title           String
+  description     String
+  startDate       DateTime
+  endDate         DateTime
+  category        EventCategory
+  banner          Banner?
+  documents       Document[]
+  photos          EventPhoto[]
+  organization    Organization @relation("organizationHasEvents", fields: [organizationId], references: [id], onDelete: Restrict)
+  organizationId  String
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime?
 }
 
 model Banner {
-  id        Int     @id @default(autoincrement())
+  id        String   @id @default(uuid())
   url       String
-  event     Event   @relation(fields: [eventId], references: [id])
-  eventId   Int
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String   @unique
 }
 
 model Document {
-  id        Int     @id @default(autoincrement())
+  id        String   @id @default(uuid())
   url       String
-  event     Event   @relation(fields: [eventId], references: [id])
-  eventId   Int
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
 }
+
+model EventPhoto {
+  id        String   @id @default(uuid())
+  url       String
+  publicId  String   
+  event     Event    @relation(fields: [eventId], references: [id])
+  eventId   String
+}
+
+
