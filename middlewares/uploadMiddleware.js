@@ -27,7 +27,7 @@ const fileFilter = (req, file, cb) => {
       return cb(null, true);
     }
   } else {
-    return cb(null, true); // Allow other fields if necessary
+    return cb(null, true); 
   }
 };
 

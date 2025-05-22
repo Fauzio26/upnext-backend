@@ -1,3 +1,147 @@
+/**
+ * @swagger
+ * /organizations/signup:
+ *   post:
+ *     summary: Registrasi organisasi baru
+ *     tags: [Organization]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - membershipProof
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "My Organization"
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "org@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "strongpassword123"
+ *               membershipProof:
+ *                 type: string
+ *                 format: binary
+ *                 description: File bukti keanggotaan (png/jpg)
+ *     responses:
+ *       201:
+ *         description: Organisasi berhasil didaftarkan
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Organization registered successfully"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *                     user:
+ *                       type: object
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                           example: 1
+ *                         name:
+ *                           type: string
+ *                           example: "My Organization"
+ *                         email:
+ *                           type: string
+ *                           example: "org@example.com"
+ *                         membershipProof:
+ *                           type: string
+ *                           example: "https://res.cloudinary.com/..."
+ *       400:
+ *         description: Request invalid email sudah terdaftar
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * /organizations/signin:
+ *   post:
+ *     summary: Login organisasi
+ *     tags: [Organization]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "org@example.com"
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: "strongpassword123"
+ *     responses:
+ *       200:
+ *         description: Login berhasil
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Sign in successful"
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     token:
+ *                       type: string
+ *       400:
+ *         description: Invalid credentials
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ *       404:
+ *         description: Organisasi tidak ditemukan
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ErrorResponse'
+ */
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     ErrorResponse:
+ *       type: object
+ *       properties:
+ *         message:
+ *           type: string
+ *           example: "Email already registered"
+ *         error:
+ *           type: string
+ *           example: "Email already registered"
+ */
+
+
+
+
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';

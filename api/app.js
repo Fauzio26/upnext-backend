@@ -3,25 +3,30 @@ import cors from 'cors';
 import authRoutes from '../routes/authRoutes.js';
 import eventRoutes from '../routes/eventRoutes.js';
 import organizationRoutes from '../routes/organizationRoutes.js';
+import { swaggerSpec, swaggerUi } from '../swagger.js';
 import dotenv from 'dotenv';
+
+dotenv.config();
 
 const feAccess = process.env.FRONTEND_ORIGIN || "http://localhost:5173";
 const app = express();
 
+
 app.use(cors({
   origin: feAccess,
-  method: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
 }));
 
 app.use(express.json());
 
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/organizations', organizationRoutes);
 
-dotenv.config();
+
 
 const PORT = process.env.PORT || 5000;
 
