@@ -53,6 +53,7 @@ model Event {
   photos          EventPhoto[]
   organization    Organization @relation("organizationHasEvents", fields: [organizationId], references: [id], onDelete: Restrict)
   organizationId  String
+  registLink      String
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
   deletedAt       DateTime?
