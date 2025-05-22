@@ -40,7 +40,7 @@
 /**
  * @swagger
  * /organization/profile:
- *   patch:
+ *   put:
  *     summary: Update profil organisasi yang sedang login
  *     tags: [Organization]
  *     security:
@@ -209,7 +209,7 @@
 /**
  * @swagger
  * /organization/{id}:
- *   patch:
+ *   put:
  *     summary: Update data organisasi berdasarkan ID
  *     tags: [Organization]
  *     parameters:
