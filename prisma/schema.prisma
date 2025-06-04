@@ -22,24 +22,6 @@ model Organization {
   events          Event[]      @relation("organizationHasEvents")
 }
 
-enum EventCategory {
-  SEMINAR
-  WORKSHOP
-  WEBINAR
-  KOMPETISI
-  PELATIHAN
-  FESTIVAL
-  PENTAS_SENI
-  BAKTI_SOSIAL
-  MUSYAWARAH
-  REUNI
-  KAMPANYE
-  PAMERAN
-  KAJIAN
-  PERINGATAN_HARI_BESAR
-  LAUNCHING
-  OTHER
-}
 
 model Event {
   id              String       @id @default(uuid())
@@ -47,7 +29,6 @@ model Event {
   description     String
   startDate       DateTime
   endDate         DateTime
-  category        EventCategory
   banner          Banner?
   documents       Document[]
   photos          EventPhoto[]

@@ -2,7 +2,6 @@ import express from 'express';
 import {
   createEvent,
   getAllEvents,
-  filterEventsByCategory,
   searchEvents,
   getEventById,
   updateEvent,
@@ -25,7 +24,6 @@ router.post(
 );
 
 router.get('/search', searchEvents);
-router.get('/filter', filterEventsByCategory);
 router.get('/', getAllEvents);
 router.get('/:id', getEventById);
 

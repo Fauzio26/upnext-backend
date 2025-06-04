@@ -3,7 +3,6 @@ import cors from 'cors';
 import authRoutes from '../routes/authRoutes.js';
 import eventRoutes from '../routes/eventRoutes.js';
 import organizationRoutes from '../routes/organizationRoutes.js';
-import { swaggerSpec, swaggerUi } from '../swagger.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -21,7 +20,6 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/auth', authRoutes);
 app.use('/events', eventRoutes);
 app.use('/organizations', organizationRoutes);

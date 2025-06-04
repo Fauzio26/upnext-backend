@@ -13,7 +13,6 @@ import upload from '../middlewares/uploadMiddleware.js';
 
 const router = express.Router();
 
-
 router.get('/me', verifyToken, getProfile);
 
 router.put(
@@ -26,16 +25,19 @@ router.put(
   updateProfile
 );
 
-
 router.get('/', getAllOrganizations); 
 router.get('/:id', getOrganizationById); 
 
 router.put(
   '/:id',
-  upload.single('membershipProof'), 
+  verifyToken,
   updateOrganization
 );
 
-router.delete('/:id', deleteOrganization); 
+router.delete(
+  '/:id',
+  verifyToken,
+  deleteOrganization
+); 
 
 export default router;
