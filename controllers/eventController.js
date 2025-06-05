@@ -131,6 +131,35 @@ export const getEventById = async (req, res) => {
   }
 };
 
+export const getEventsByUser = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+  const event = await prisma.event.findMany({
+  where: {
+    organizationId: userId,
+    deletedAt: null, 
+  },
+  include: {
+    banner: true,
+    documents: true,
+    photos: true,
+  },
+  orderBy: {
+    startDate: 'desc',
+  },
+});
+
+ if (!event) {
+      return errorResponse(res, 'Event not found', null, 404);
+    }
+
+    return successResponse(res, 'Event fetched successfully', { event });
+  } catch (error) {
+    console.error(error);
+    return errorResponse(res, 'Failed to fetch event', error.message);
+  }
+};
 
 export const searchEvents = async (req, res) => {
   const { q } = req.query;

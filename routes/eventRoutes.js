@@ -4,6 +4,7 @@ import {
   getAllEvents,
   searchEvents,
   getEventById,
+  getEventsByUser,
   updateEvent,
   deleteEvent,
 } from '../controllers/eventController.js';
@@ -23,9 +24,11 @@ router.post(
   createEvent
 );
 
+router.get('/my', verifyToken, getEventsByUser);
 router.get('/search', searchEvents);
 router.get('/', getAllEvents);
 router.get('/:id', getEventById);
+
 
 
 router.put(
