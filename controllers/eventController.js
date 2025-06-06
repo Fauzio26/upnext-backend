@@ -50,6 +50,7 @@ export const createEvent = async (req, res) => {
           use_filename: true,
           unique_filename: true,
           filename_override: file.originalname,
+          access_mode: 'public',
         });
 
         await prisma.document.create({
