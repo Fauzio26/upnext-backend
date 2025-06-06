@@ -2,7 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import { successResponse, errorResponse } from '../utils/responseFormatter.js';
 import { streamUpload } from '../utils/cloudinary-upload.js';
 import { deleteResource } from '../utils/cloudinary-delete.js';
-import { nowWIB } from '../utils/time.js';
 import { delEv} from '../utils/delEventGeneral.js';
 
 const prisma = new PrismaClient();
@@ -315,7 +314,7 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   try {
-    await deleteEventById(req.params.id);
+    await delEv(req.params.id);
     return successResponse(res, 'Event and uploads deleted');
   } catch (error) {
     console.error(error);
