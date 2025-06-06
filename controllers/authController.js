@@ -14,9 +14,14 @@ export const signUpOrganization = async (req, res) => {
     if (!membershipProofFile) {
       return errorResponse(res, 'Membership proof file is required (png/jpg).', null, 400);
     }
+    const existingActive = await prisma.organization.findFirst({
+      where: {
+        email,
+        deletedAt: null,      
+      },
+    });
 
-    const existing = await prisma.organization.findUnique({ where: { email } });
-    if (existing) {
+    if (existingActive) {
       return errorResponse(res, 'Email already registered', null, 400);
     }
 
@@ -61,11 +66,20 @@ export const signInOrganization = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const organization = await prisma.organization.findUnique({ where: { email } });
-    if (!organization) return errorResponse(res, 'Organization not found', null, 404);
+    const organization = await prisma.organization.findFirst({
+      where: {
+        email,
+        deletedAt: null,      
+      },
+    });
+    if (!organization) {
+      return errorResponse(res, 'Organization not found or has been deleted', null, 404);
+    }
 
     const isMatch = await bcrypt.compare(password, organization.password);
-    if (!isMatch) return errorResponse(res, 'Invalid credentials', null, 400);
+    if (!isMatch) {
+      return errorResponse(res, 'Invalid credentials', null, 400);
+    }
 
     const token = jwt.sign(
       { id: organization.id, email: organization.email },

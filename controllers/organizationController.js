@@ -4,6 +4,7 @@ import { deleteResource } from '../utils/cloudinary-delete.js';
 import { streamUpload } from '../utils/cloudinary-upload.js';
 import { nowWIB } from '../utils/time.js';
 import { toWIB } from '../utils/time.js';
+import { delEv } from '../utils/delEventGeneral.js';
 import bcrypt from 'bcryptjs';
 
 
@@ -170,12 +171,20 @@ export const deleteOrganization = async (req, res) => {
       await deleteResource(publicId);
     }
 
+    const events = await prisma.event.findMany({
+      where: { organizationId: id, deletedAt:null },
+    })
+
+    for (const event of events) {
+      await delEv(event.id);
+    }
+
     await prisma.organization.update({
       where: { id },
       data: { deletedAt: nowWIB() },
     });
 
-    res.json({ message: 'Organization successfully deleted' });
+    res.json({ message: 'Organization and Related events successfully deleted' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

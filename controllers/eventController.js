@@ -3,7 +3,7 @@ import { successResponse, errorResponse } from '../utils/responseFormatter.js';
 import { streamUpload } from '../utils/cloudinary-upload.js';
 import { deleteResource } from '../utils/cloudinary-delete.js';
 import { nowWIB } from '../utils/time.js';
-
+import { delEv} from '../utils/delEventGeneral.js';
 
 const prisma = new PrismaClient();
 
@@ -314,39 +314,8 @@ export const updateEvent = async (req, res) => {
 };
 
 export const deleteEvent = async (req, res) => {
-  const { id } = req.params;
-
   try {
-    const event = await prisma.event.findFirst({
-      where: { id, deletedAt: null },
-      include: {
-        banner: true,
-        documents: true,
-        photos: true,
-      },
-    });
-
-    if (!event) {
-      return errorResponse(res, 'Event not found', null, 404);
-    }
-
-    if (event.banner) {
-      await deleteResource(event.banner.publicId);
-    }
-
-    for (const doc of event.documents) {
-      await deleteResource(doc.publicId, { resource_type: 'raw' });
-    }
-
-    for (const photo of event.photos) {
-      await deleteResource(photo.publicId);
-    }
-
-    await prisma.event.update({
-      where: { id },
-      data: { deletedAt: nowWIB() },
-    });
-
+    await deleteEventById(req.params.id);
     return successResponse(res, 'Event and uploads deleted');
   } catch (error) {
     console.error(error);
